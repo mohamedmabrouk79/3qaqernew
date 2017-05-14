@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">عقاقير</string>
+    <string name="password_hint">ادخل كلمه المرور</string>
+    <string name="username_hint">ادخل اسم المستخدم</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="singup">انشاء حساب جديد</string>
+</resources>
