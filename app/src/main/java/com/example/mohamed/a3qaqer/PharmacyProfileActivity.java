@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +67,10 @@ public class PharmacyProfileActivity extends AppCompatActivity {
         addpost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PharmacyProfileActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(PharmacyProfileActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
+                android.app.FragmentManager fragmentManager=getFragmentManager();
+                UploadFragment uploadFragment=UploadFragment.newFragment(mFirebaseUser);
+                uploadFragment.show(fragmentManager,"mohamed");
 
             }
         });
@@ -83,7 +87,7 @@ public class PharmacyProfileActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PharmacyProfileActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(PharmacyProfileActivity.this, "Edit", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -126,7 +130,7 @@ public class PharmacyProfileActivity extends AppCompatActivity {
                                 pharmacy.setPhone(map.get("phone"));
                                 pharmacy.setLoction(map.get("location"));
                                 pharmacy.setName(map.get("name"));
-                                  Toast.makeText(PharmacyProfileActivity.this, pharmacy.getName()+"", Toast.LENGTH_SHORT).show();
+                              //    Toast.makeText(PharmacyProfileActivity.this, pharmacy.getName()+"", Toast.LENGTH_SHORT).show();
                                 Drug drug=new Drug();
                                 drug.setType(map1.get("type"));
                                 drug.setDrugName(map1.get("name"));
@@ -148,7 +152,7 @@ public class PharmacyProfileActivity extends AppCompatActivity {
                           pharmacy.setPhone(map.get("phone"));
                           pharmacy.setLoction(map.get("location"));
                           pharmacy.setName(map.get("name"));
-                          Toast.makeText(PharmacyProfileActivity.this, pharmacy.getName()+"", Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(PharmacyProfileActivity.this, pharmacy.getName()+"", Toast.LENGTH_SHORT).show();
                           Drug drug=new Drug();
                           pharmacy.setDrug(drug);
                           mPharmacies.add(pharmacy);
