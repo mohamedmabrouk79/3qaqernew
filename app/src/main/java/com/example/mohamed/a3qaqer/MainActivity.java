@@ -1,7 +1,11 @@
 package com.example.mohamed.a3qaqer;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference  mDatabaseReference;
     private ProgressDialog mProgressDialog;
+    LocationManager locationManager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         Login= (Button) findViewById(R.id.login);
         signUp= (Button) findViewById(R.id.singup);
         mFirebaseAuth=FirebaseAuth.getInstance();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
         mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setMessage("تسجيل الدخول ....");
         mProgressDialog.setCanceledOnTouchOutside(false);
@@ -110,4 +119,22 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "مفيش نت ", Toast.LENGTH_SHORT).show();
         }
     }
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("يفضل فتح ال GPS,هل تريد فتحه؟")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 }
