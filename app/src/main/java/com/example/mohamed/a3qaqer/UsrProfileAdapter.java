@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 
 /**
@@ -16,13 +18,16 @@ import java.util.List;
 public class UsrProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
+    private FirebaseUser mUser;
+
     Pharmacy header;
     List<Pharmacy> listItems;
 
 
-    public UsrProfileAdapter(Pharmacy mHeader, List<Pharmacy> mUserPosts){
+    public UsrProfileAdapter(Pharmacy mHeader, List<Pharmacy> mUserPosts, FirebaseUser user){
         this.header=mHeader;
         this.listItems= mUserPosts;
+        mUser=user;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -34,7 +39,7 @@ public class UsrProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }else if (viewType==TYPE_ITEM){
             Log.v("Type",TYPE_ITEM+"");
             View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.post_view,parent,false);
-             return new PhamacyHolder(view);
+             return new PhamacyHolder(view,mUser);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }

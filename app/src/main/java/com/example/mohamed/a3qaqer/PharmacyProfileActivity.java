@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ public class PharmacyProfileActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabaseReference;
     private DatabaseReference mDatabaseReferenceDrugs;
+    private FirebaseAuth mFirebaseAuth;
     private static  FirebaseUser mFirebaseUser;
     private List<Pharmacy>  mPharmacies=new ArrayList<>();
     public static Intent newIntent(Context context, FirebaseUser firebaseUser){
@@ -53,15 +56,27 @@ public class PharmacyProfileActivity extends AppCompatActivity {
         rightLabels.addButton(addpost);
         addpost.setIcon(R.drawable.ic_plus_white_24dp);
         FloatingActionButton edit = new FloatingActionButton(this);
+        FloatingActionButton logout = new FloatingActionButton(this);
         edit.setTitle("Added twice");
+        rightLabels.addButton(logout);
+        logout.setIcon(R.drawable.ic_logout_white_24dp);
         rightLabels.addButton(edit);
         edit.setIcon(R.drawable.ic_tooltip_edit_white_24dp);
-
+        mFirebaseAuth=FirebaseAuth.getInstance();
         addpost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(PharmacyProfileActivity.this, "Add Post", Toast.LENGTH_SHORT).show();
 
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+             mFirebaseAuth.signOut();
+                startActivity(new Intent(PharmacyProfileActivity.this,MainActivity.class));
+                finish();
             }
         });
 
@@ -94,7 +109,13 @@ public class PharmacyProfileActivity extends AppCompatActivity {
                   public void onDataChange(DataSnapshot dataSnapshot) {
 //                      List<String> list=new ArrayList<String>();
 //                      list = (List<String>) dataSnapshot.getValue();
-                      Map<String,String> list= (Map<String, String>) dataSnapshot.getValue();
+                      Map<String,String> list=new HashMap<String, String>();
+                     list= (Map<String, String>) dataSnapshot.getValue();
+                      try {
+                          if (list.values() == null) {
+                              return;
+                          }
+
                       for (String s:list.values()) {
                         DatabaseReference reference1=mDatabaseReferenceDrugs.child(s);
                           reference1.addValueEventListener(new ValueEventListener() {
@@ -122,6 +143,18 @@ public class PharmacyProfileActivity extends AppCompatActivity {
                           });
                       }
 
+                      }catch (Exception f){
+                          Pharmacy pharmacy=new Pharmacy();
+                          pharmacy.setPhone(map.get("phone"));
+                          pharmacy.setLoction(map.get("location"));
+                          pharmacy.setName(map.get("name"));
+                          Toast.makeText(PharmacyProfileActivity.this, pharmacy.getName()+"", Toast.LENGTH_SHORT).show();
+                          Drug drug=new Drug();
+                          pharmacy.setDrug(drug);
+                          mPharmacies.add(pharmacy);
+                          update(mPharmacies,pharmacy);
+                      }
+
                   }
 
                   @Override
@@ -139,7 +172,7 @@ public class PharmacyProfileActivity extends AppCompatActivity {
     }
 
     private void update(List<Pharmacy> mPharmacie,Pharmacy pharmacy){
-        mRecyclerView.setAdapter(new UsrProfileAdapter(pharmacy,mPharmacie));
+        mRecyclerView.setAdapter(new UsrProfileAdapter(pharmacy,mPharmacie,mFirebaseUser));
     }
 
 }

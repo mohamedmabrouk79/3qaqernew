@@ -2,10 +2,18 @@ package com.example.mohamed.a3qaqer;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -28,6 +36,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActvity extends AppCompatActivity {
     private EditText name,password,license,phone,address;
+    LocationManager locationManager;
+     private String loc_string;
     private Button signup;
     private ProgressDialog mProgressDialog;
     private DatabaseReference mDatabaseReference;
@@ -50,6 +60,10 @@ public class RegisterActvity extends AppCompatActivity {
         mFirebaseAuth=FirebaseAuth.getInstance();
         mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setMessage("انشاء حساب ......");
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                  buildAlertMessageNoGps();
+               }
         mDatabaseReference= FirebaseDatabase.getInstance().getReference().child("pharmacies");
        signUp();
     }
@@ -66,6 +80,7 @@ public class RegisterActvity extends AppCompatActivity {
                     final String Lisance = license.getText().toString().trim();
                     String Password = password.getText().toString().trim();
 
+
                     if (TextUtils.isEmpty(mName)) {
                         Toast.makeText(RegisterActvity.this, "ادخل اسم المستخدم !", Toast.LENGTH_SHORT).show();
                     } else if (TextUtils.isEmpty(mPhone)) {
@@ -81,7 +96,12 @@ public class RegisterActvity extends AppCompatActivity {
                         Toast.makeText(RegisterActvity.this, "ادخل كلمه المرور ", Toast.LENGTH_SHORT).show();
 
                     } else {
-
+                        try {
+                             getloc();
+                           }catch (NullPointerException f){
+                           // if no gps data
+                               Toast.makeText(RegisterActvity.this, " هناك عطل فى الgps. اعد المحاوله الان", Toast.LENGTH_SHORT).show();
+                             }
                         mProgressDialog.show();
                         mFirebaseAuth.createUserWithEmailAndPassword(mPhone + "@3qaqer.com", Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
@@ -111,5 +131,64 @@ public class RegisterActvity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void buildAlertMessageNoGps() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("يفضل فتح ال GPS,هل تريد فتحه؟")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void getloc() {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            loc_string="none";// indicate that no gps data
+            return;
+        }
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setBearingRequired(true);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAltitudeRequired(false);
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(bestProvider, 2000, 10, new LocationListener() {
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+            }
+
+            @Override
+            public void onLocationChanged(final Location location) {
+            }
+        });
+        Location myLocation = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        double longitude = myLocation.getLongitude();
+        double latitude = myLocation.getLatitude();
+        loc_string = latitude + "-" + longitude;
+
     }
 }
