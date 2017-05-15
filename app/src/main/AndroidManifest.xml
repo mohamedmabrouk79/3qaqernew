@@ -16,7 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ResultSeachActivity"></activity>
+        <activity android:name=".ResultSeachActivity"
+            android:theme="@style/ResultThem"
+            android:parentActivityName=".MainActivity" ></activity>
+        <activity android:name=".RegisterActvity" />
+        <activity android:name=".LoginActivity"/>
     </application>
 
 </manifest>

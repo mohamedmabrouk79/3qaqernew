@@ -8,8 +8,16 @@ public class Drug {
     private String imageUrl;
     private String tarkez;
     private String type;
-    private String PhId;
+    private String drugName;
+    private Pharmacy pharmacy;
 
+    public String getDrugName() {
+        return drugName;
+    }
+
+    public void setDrugName(String drugName) {
+        this.drugName = drugName;
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -35,11 +43,11 @@ public class Drug {
         this.type = type;
     }
 
-    public String getPhId() {
-        return PhId;
+    public Pharmacy getPharmacy() {
+        return pharmacy;
     }
 
-    public void setPhId(String phId) {
-        PhId = phId;
+    public void setPharmacy(Pharmacy pharmacy) {
+        this.pharmacy = pharmacy;
     }
 }

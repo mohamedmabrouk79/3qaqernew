@@ -4,4 +4,7 @@
     <string name="username_hint">ادخل اسم المستخدم</string>
     <string name="login">تسجيل الدخول</string>
     <string name="singup">انشاء حساب جديد</string>
+    <string name="search">بحث</string>
+    <string name="not_drug">الرجاء ادخل اسم الدواء صحيح</string>
+    <string name="name">اسم المستخدم</string>
 </resources>

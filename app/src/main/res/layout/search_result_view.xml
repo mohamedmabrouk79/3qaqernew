@@ -4,9 +4,26 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/error"
+        android:layout_marginTop="250dp"
+        android:textSize="@dimen/text_size_hint"
+        android:text="@string/not_drug"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        />
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 <android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/result_recycler_view"
-    ></android.support.v7.widget.RecyclerView>
+    >
+
+
+</android.support.v7.widget.RecyclerView>
 </LinearLayout>

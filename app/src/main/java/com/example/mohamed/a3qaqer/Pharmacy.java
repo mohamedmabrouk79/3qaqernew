@@ -9,6 +9,7 @@ public class Pharmacy {
     private String phone;
     private String loction;
 
+
     public String getName() {
         return name;
     }
