@@ -8,7 +8,14 @@ public class Pharmacy {
     private String name;
     private String phone;
     private String loction;
+    private Drug drug;
+    public Drug getDrug() {
+        return drug;
+    }
 
+    public void setDrug(Drug drug) {
+        this.drug = drug;
+    }
 
     public String getName() {
         return name;

@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser user=mFirebaseAuth.getCurrentUser();
+        final FirebaseUser user=mFirebaseAuth.getCurrentUser();
         if (CheckConnection.isNetworkConnected(MainActivity.this) && CheckConnection.isNetworkAvailableAndConnected(MainActivity.this)) {
             if (user != null) {
                 mProgressDialog.show();
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                        startActivity(PharmacyProfileActivity.newIntent(context,user));
                         mProgressDialog.dismiss();
                     }
 

@@ -21,6 +21,7 @@
             android:parentActivityName=".MainActivity" ></activity>
         <activity android:name=".RegisterActvity" />
         <activity android:name=".LoginActivity"/>
+        <activity android:name=".PharmacyProfileActivity"/>
     </application>
 
 </manifest>

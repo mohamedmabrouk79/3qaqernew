@@ -94,6 +94,8 @@ public class RegisterActvity extends AppCompatActivity {
                                     mReference.child("phone").setValue(mPhone);
                                     mReference.child("location").setValue(Lisance);
                                     mProgressDialog.dismiss();
+                                    FirebaseUser mUser1=mFirebaseAuth.getCurrentUser();
+                                    startActivity(PharmacyProfileActivity.newIntent(RegisterActvity.this,mUser1));
                                     Toast.makeText(RegisterActvity.this, "تم التسجيل بنجاح ", Toast.LENGTH_SHORT).show();
 
                                 } else {
